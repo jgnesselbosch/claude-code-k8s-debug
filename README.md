@@ -8,7 +8,7 @@ The ArgoCD Kubernetes Debugger is a Claude Code plugin that helps developers and
 
 - **Interactive Guided Diagnostics** - A focused skill that asks the right questions to systematically identify issues
 - **Quick Status Checks** - Slash commands for rapid deployment and pod inspection
-- **Kubernetes Integration** - Seamless access to cluster state via the kubernetes-mcp-server
+- **Kubernetes Integration** - Seamless access to cluster state via kubectl CLI
 - **Team-Friendly Approach** - Progressive disclosure of technical details based on user needs
 
 ## Quick Start
@@ -78,8 +78,6 @@ Quick diagnostic commands for specific tasks:
 
 ## Prerequisites
 
-- **Node.js 14+** - For running the kubernetes-mcp-server
-- **npm or equivalent** - Package manager for installing dependencies
 - **kubectl configured** - Access to your Kubernetes cluster with appropriate permissions
 - **Kubernetes 1.20+** - Cluster version
 - **ArgoCD CLI** (optional) - For ArgoCD-specific troubleshooting commands
@@ -180,15 +178,13 @@ The plugin helps troubleshoot:
 .claude/
 ├── skills/
 │   └── k8s-deployment-debugger.md # Interactive debugging skill
-│       └── Allowed tools: MCP functions, AskUserQuestion
+│       └── Allowed tools: Bash, AskUserQuestion
 └── commands/
     ├── debug-app.md               # /debug-app command
     ├── check-deployment.md        # /check-deployment command
     ├── view-pod-logs.md           # /view-pod-logs command
     ├── check-events.md            # /check-events command
     └── check-resources.md         # /check-resources command
-
-.mcp.json                          # Kubernetes MCP server configuration
 ```
 
 ### How It Works
@@ -196,36 +192,28 @@ The plugin helps troubleshoot:
 1. **User Request** → "Help me debug my failing pod"
 2. **Skill Activation** → The debugger skill activates automatically
 3. **Interactive Questioning** → Asks for namespace, deployment name, symptoms
-4. **Data Collection** → Uses kubernetes-mcp-server to query cluster state
+4. **Data Collection** → Uses kubectl commands to query cluster state
 5. **Analysis** → Examines logs, events, resource usage, pod status
 6. **Diagnosis** → Identifies root cause
 7. **Guidance** → Suggests fixes and explains solutions
 8. **Follow-up** → Asks if they need more details or help with next steps
 
-## MCP Server Integration
+## kubectl Integration
 
-The plugin uses the **kubernetes-mcp-server** via stdio transport:
+The plugin uses **kubectl CLI** for all Kubernetes operations:
 
-```json
-{
-  "mcpServers": {
-    "kubernetes": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["@containerized/kubernetes-mcp-server"],
-      "env": {"KUBECONFIG": "${KUBECONFIG:-~/.kube/config}"}
-    }
-  }
-}
-```
+- **Simple** - No additional dependencies beyond kubectl
+- **Direct** - Uses standard kubectl commands you already know
+- **Flexible** - Respects your KUBECONFIG and context settings
+- **Powerful** - Full access to cluster resources
 
-**Available Tools**:
-- Pod operations (list, get, logs, exec, metrics)
-- Resource management (CRUD for any K8s object)
-- Cluster information (namespaces, events, kubeconfig)
-- Helm operations (install, list, uninstall)
+**Common kubectl commands used**:
+- `kubectl get pods/deployments/events`
+- `kubectl describe pod/deployment`
+- `kubectl logs <pod>`
+- `kubectl top pods` (requires Metrics Server)
 
-See [kubernetes-mcp-server documentation](https://github.com/containers/kubernetes-mcp-server) for details.
+The plugin works with your existing kubectl configuration and cluster contexts.
 
 ## Usage Examples
 

@@ -23,8 +23,5 @@
     "onCommand:k8s-debug-app",
     "onCommand:k8s-check-deployment",
     "onCommand:k8s-view-events"
-  ],
-  "mcpServers": [
-    "kubernetes"
   ]
 }

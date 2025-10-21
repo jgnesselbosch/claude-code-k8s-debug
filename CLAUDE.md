@@ -50,20 +50,19 @@ This repository contains the **ArgoCD Kubernetes Debugger** plugin for Claude Co
    - `/argocd-app-history` - View deployment history
    - `/argocd-app-rollback` - Rollback to previous revision
 
-3. **MCP Server Integration** (`.mcp.json`)
-   - Configured to use kubernetes-mcp-server via stdio transport
-   - Provides programmatic access to Kubernetes API
-   - Allows listing/getting/reading pods, deployments, logs, events, metrics, and more
+3. **kubectl CLI Integration**
+   - Uses `kubectl` commands via Bash for all Kubernetes operations
+   - No additional MCP server dependencies required
+   - Direct and simple integration with standard Kubernetes tooling
 
 ## Installation and Setup
 
 ### Prerequisites
 
-1. **Node.js and npm** - For running the kubernetes-mcp-server
-2. **kubectl configured** - With access to your Kubernetes cluster
-3. **Kubernetes cluster** - With ArgoCD or another deployment mechanism
-4. **ArgoCD CLI** (optional) - For ArgoCD-specific troubleshooting (`argocd` command)
-5. **Metrics Server** (optional) - For resource usage checking
+1. **kubectl configured** - With access to your Kubernetes cluster
+2. **Kubernetes cluster** - With ArgoCD or another deployment mechanism
+3. **ArgoCD CLI** (optional) - For ArgoCD-specific troubleshooting (`argocd` command)
+4. **Metrics Server** (optional) - For resource usage checking
 
 ### Installation Steps
 
@@ -72,7 +71,11 @@ This repository contains the **ArgoCD Kubernetes Debugger** plugin for Claude Co
    claude plugins install ./path/to/claude-code-k8s-debug
    ```
 
-2. The kubernetes-mcp-server will be automatically available when the plugin loads
+2. Ensure `kubectl` is configured and can access your cluster:
+   ```bash
+   kubectl cluster-info
+   kubectl get nodes
+   ```
 
 3. Optional: Configure a specific kubeconfig if not using default:
    ```bash
@@ -117,11 +120,11 @@ Try the ArgoCD slash commands (requires `argocd` CLI installed and logged in):
 - **Progressive disclosure** - Detailed explanations available on request
 - **Collaborative approach** - Guides users through systematic problem-solving
 
-### MCP Server Integration
-- Uses **stdio transport** with npx for easy dependency management
+### kubectl Integration
+- Uses **kubectl CLI** via Bash for all Kubernetes operations
 - Respects `KUBECONFIG` environment variable for cluster selection
-- Access scoped through allowed-tools in skill definition
-- Enables dynamic cluster introspection vs. static scripts
+- No additional dependencies beyond standard Kubernetes tooling
+- Simple and direct access to cluster resources
 
 ### Command Design
 - **Modular** - Each command focuses on one diagnostic aspect
@@ -133,45 +136,36 @@ Try the ArgoCD slash commands (requires `argocd` CLI installed and logged in):
 ### Adding a New Diagnostic Capability
 
 1. Create a new command file in `.claude/commands/` with clear examples
-2. Add the allowed tool(s) to the skill's `allowed-tools` list in `.claude/skills/`
-3. Update `.mcp.json` if new MCP server interaction types are needed
+2. Document the kubectl commands and expected usage patterns
+3. Test with your cluster to ensure proper output formatting
 
 ### Enhancing the Skill
 
 The skill in `.claude/skills/k8s-deployment-debugger.md` should:
 - Guide users through problems step-by-step
 - Ask clarifying questions using AskUserQuestion
-- Use MCP tools to gather cluster state
+- Use kubectl commands via Bash to gather cluster state
 - Present findings clearly and suggest next steps
 - Reference slash commands when appropriate
 
 ### Testing Cluster Access
 
 ```bash
-# Verify kubernetes-mcp-server is installed
-npx @containerized/kubernetes-mcp-server --version
-
-# Test kubectl access
+# Verify kubectl is installed and configured
+kubectl version --client
 kubectl cluster-info
 kubectl get nodes
+
+# Test access to your cluster
+kubectl get namespaces
+kubectl get pods --all-namespaces
 ```
-
-## MCP Server Details
-
-The plugin uses the kubernetes-mcp-server with these capabilities:
-
-**Pod Operations**: List, get, delete, logs, exec, run, top (metrics)
-**Resource Management**: Create/update/delete any K8s resource (CRUD)
-**Cluster Info**: View kubeconfig, namespaces, events, contexts
-**Helm Integration**: Install, list, uninstall releases
-
-See https://github.com/containers/kubernetes-mcp-server for full documentation.
 
 ## Integration Points
 
 - **ArgoCD**: The skill can help diagnose ArgoCD sync issues, app health, and deployment status
 - **GitOps**: Provides debugging for git-reconciled workloads
-- **Multi-cluster**: The kubernetes-mcp-server supports multi-cluster operations (future enhancement)
+- **kubectl contexts**: Supports multi-cluster operations via kubectl context switching
 
 ## Testing Considerations
 

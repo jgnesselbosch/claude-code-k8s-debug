@@ -6,17 +6,6 @@ description: >-
   systematic diagnostics. Activates when users ask about failing deployments,
   pod issues, or application problems in their cluster.
 allowed-tools:
-  - mcp__kubernetes__configuration_view
-  - mcp__kubernetes__namespaces_list
-  - mcp__kubernetes__pods_list_in_namespace
-  - mcp__kubernetes__pods_get
-  - mcp__kubernetes__pods_log
-  - mcp__kubernetes__pods_exec
-  - mcp__kubernetes__pods_top
-  - mcp__kubernetes__resources_list
-  - mcp__kubernetes__resources_get
-  - mcp__kubernetes__events_list
-  - mcp__kubernetes__helm_list
   - Bash
   - AskUserQuestion
 ---
