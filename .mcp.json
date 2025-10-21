@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "kubernetes": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@containerized/kubernetes-mcp-server"],
+      "env": {
+        "KUBECONFIG": "${KUBECONFIG:-~/.kube/config}"
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0",
+  "name": "ArgoCD Kubernetes Debugger",
+  "id": "argocd-k8s-debugger",
+  "description": "Intelligent debugging assistant for applications deployed to GitOps-enabled Kubernetes clusters backed by ArgoCD. Helps developers and DevOps engineers troubleshoot failing deployments through interactive guided diagnostics.",
+  "version": "0.1.0",
+  "author": "Claude Code",
+  "license": "MIT",
+  "homepage": "https://github.com/jgnesselbosch/claude-code-k8s-debug",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jgnesselbosch/claude-code-k8s-debug.git"
+  },
+  "keywords": [
+    "kubernetes",
+    "argocd",
+    "debugging",
+    "devops",
+    "gitops",
+    "diagnostics"
+  ],
+  "activationEvents": [
+    "onCommand:k8s-debug-app",
+    "onCommand:k8s-check-deployment",
+    "onCommand:k8s-view-events"
+  ],
+  "mcpServers": [
+    "kubernetes"
+  ]
+}
