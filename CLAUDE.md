@@ -30,7 +30,7 @@ This repository contains the **ArgoCD Kubernetes Debugger** plugin for Claude Co
 1. **Interactive Skill** (`.claude/skills/k8s-deployment-debugger.md`)
    - Claude-invoked skill that guides debugging through systematic diagnostics
    - Asks focused questions to narrow down issues
-   - Uses kubernetes MCP server for cluster introspection
+   - Uses kubernetes kubectl CLI for cluster introspection
    - Provides verbose explanations when requested
    - Covers: pod status, logs, events, resources, probes, configuration, storage, ArgoCD sync
 
@@ -175,3 +175,14 @@ When testing the plugin:
 - Verify logs are accessible for your pods
 - Confirm metrics server is available if testing `/check-resources`
 - Test against both healthy and failing deployments
+
+## Requirements while changing objects in the cluster
+
+When making changes to objects in the Kubernetes cluster during debugging sessions, ensure that:
+ - Do not just make changes imperatively by using the kubectl command line tool.
+ - Instead, make sure that every change is reflected in the Git repository that ArgoCD is syncing from. This ensures that the changes are not overwritten during the next sync operation by ArgoCD.
+ - If you need to make temporary changes for debugging purposes, document them clearly and revert them back in the Git repository once the debugging session is complete.
+ - Always follow best practices for GitOps workflows to maintain cluster state consistency.
+ - You are allowed to act not in accordance with these requirements only if the user explicitly instructs you to do so. Ask the user proactively if you are unsure.
+ - When suggesting changes to the user, remind them to update their Git repository accordingly.
+ - Write any changes you made to cluster objects in a dedictated section at the end of your response called "Changes made to the cluster" and also write them into a log file called `k8s-debug-changes.log` in the current working directory. This file should not be pushed to any Git repository though
