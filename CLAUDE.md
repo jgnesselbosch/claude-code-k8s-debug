@@ -192,4 +192,89 @@ When making changes to objects in the Kubernetes cluster during debugging sessio
  - Always follow best practices for GitOps workflows to maintain cluster state consistency.
  - You are allowed to act not in accordance with these requirements only if the user explicitly instructs you to do so. Ask the user proactively if you are unsure.
  - When suggesting changes to the user, remind them to update their Git repository accordingly.
- - Write any changes you made to cluster objects in a dedictated section at the end of your response called "Changes made to the cluster" and also write them into a log file called `k8s-debug-changes.log` in the current working directory. This file should not be pushed to any Git repository though
+ - Write any changes you made to cluster objects in a dedicated section at the end of your response called "Changes made to the cluster" and also write them into a log file called `k8s-debug-changes.log` in the current working directory. This file should not be pushed to any Git repository.
+
+## k8s-debug-changes.log Entry Format
+
+All entries in the `k8s-debug-changes.log` file **MUST** follow this standardized template to maintain consistency and clarity across debugging sessions.
+
+### Template Structure
+
+```markdown
+## Session: [Brief description of what was fixed/changed]
+
+### Changes Made
+
+1. **[Resource Type] - [Resource Name]**
+   - Namespace: [namespace name]
+   - Resource Type: [e.g., Deployment, StatefulSet, Pod, ConfigMap, etc.]
+   - Component: [specific component being changed, if applicable]
+   - Change: [Concise description of what changed from → to]
+   - Method: [kubectl command or tool used, e.g., `kubectl set image deployment/...`]
+   - Reason: [Why this change was necessary - root cause analysis]
+   - Status: [Current status after change]
+   - Timestamp: [Date and time of change in ISO format]
+
+### Issue Resolved
+
+- **Problem**: [What was broken or not working]
+- **Root Cause**: [Technical root cause analysis]
+- **Solution**: [How the issue was fixed]
+- **Result**: [Actual outcome of the fix]
+- **Old State**: [Previous pod/resource name/status if applicable]
+- **New State**: [Current pod/resource name/status if applicable]
+
+### Important Notes
+
+[Any critical information about the change, caveats, or warnings]
+
+### Follow-up Actions Required
+
+[Actions user must take, such as updating Git repository, reverting changes, etc.]
+```
+
+### Usage Guidelines
+
+- **One session per heading**: Each debugging session gets one `## Session:` header
+- **Multiple resources**: If multiple resources were changed in one session, list each under "Changes Made" with separate numbered items
+- **Timestamps**: Use ISO 8601 format: `YYYY-MM-DD HH:MM:SS TIMEZONE`
+- **GitOps reminder**: Always include a note about updating the Git repository for imperative changes
+- **Root cause clarity**: Be specific about *why* the issue occurred, not just *what* was changed
+- **Status updates**: Document both the problem state and the fixed state clearly
+
+### Example Entry
+
+```markdown
+## Session: nginx-foul Deployment ImagePullBackOff Fix
+
+### Changes Made
+
+1. **Deployment - nginx-foul**
+   - Namespace: default
+   - Resource Type: Deployment
+   - Component: Container image specification
+   - Change: Updated image from `nginx:9.9.9` → `nginx:latest`
+   - Method: `kubectl set image deployment/nginx-foul nginx=nginx:latest -n default`
+   - Reason: The tag `nginx:9.9.9` does not exist in Docker registry; blocking pod startup
+   - Status: Successfully applied; pods now running
+   - Timestamp: 2025-10-22 16:19:05 UTC
+
+### Issue Resolved
+
+- **Problem**: Pod stuck in ImagePullBackOff state, unable to start
+- **Root Cause**: Invalid/non-existent Docker image tag (`nginx:9.9.9`) specified in deployment manifest
+- **Solution**: Updated to valid, stable nginx image tag (`nginx:latest`)
+- **Result**: Deployment healthy with all replicas running
+- **Old State**: Pod `nginx-foul-74d8b5c584-d2ptw` (failed, deleted)
+- **New State**: Pod `nginx-foul-85478887d-x9hp4` (running, healthy)
+
+### Important Notes
+
+This was an imperative hotfix using kubectl. The change will be lost on next ArgoCD sync unless the source manifest in Git is updated.
+
+### Follow-up Actions Required
+
+1. Update deployment manifest in Git repository with corrected image tag
+2. Commit and push changes to trigger ArgoCD sync
+3. Verify new pods are deployed from Git-synced manifests
+```
