@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0",
+  "name": "argocd-k8s-debugger-marketplace",
+  "description": "ArgoCD Kubernetes Debugger plugin for Claude Code",
+  "version": "1.0.0",
+  "owner": {
+    "name": "Jean-Gert Nesselbosch",
+    "url": "https://github.com/jgnesselbosch"
+  },
+  "plugins": [
+    {
+      "name": "argocd-k8s-debugger",
+      "description": "Intelligent debugging assistant for applications deployed to GitOps-enabled Kubernetes clusters backed by ArgoCD. Helps developers and DevOps engineers troubleshoot failing deployments through interactive guided diagnostics.",
+      "version": "0.1.0",
+      "author": "Claude Code",
+      "homepage": "https://github.com/jgnesselbosch/claude-code-k8s-debug",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/jgnesselbosch/claude-code-k8s-debug.git"
+      },
+      "license": "MIT",
+      "keywords": [
+        "kubernetes",
+        "argocd",
+        "debugging",
+        "devops",
+        "gitops",
+        "diagnostics"
+      ],
+      "category": "devops",
+      "source": "."
+    }
+  ]
+}

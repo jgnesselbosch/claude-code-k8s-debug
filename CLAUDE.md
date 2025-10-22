@@ -11,30 +11,37 @@ This repository contains the **ArgoCD Kubernetes Debugger** plugin for Claude Co
 ### Directory Structure
 
 ```
-.claude-plugin/              # Plugin metadata
-├── plugin.json              # Plugin manifest
+.claude-plugin/                      # Plugin metadata
+├── plugin.json                      # Plugin manifest
+├── marketplace.json                 # Plugin marketplace configuration
+commands/                            # Slash commands (at root)
+├── debug-app.md                     # Main debugging command
+├── check-deployment.md              # Quick deployment status
+├── view-pod-logs.md                 # Pod log viewing
+├── check-events.md                  # Cluster events viewer
+├── check-resources.md               # Resource usage checker
+└── [ArgoCD commands...]             # ArgoCD-specific commands
+skills/                              # Claude Code Skills (at root)
+└── k8s-deployment-debugger/
+    └── SKILL.md                     # Interactive debugging skill
+docs/                                # Documentation
+├── ARGOCD_FEATURES.md               # ArgoCD integration details
+├── ARGOCD_SETUP.md                  # Setup instructions
+└── GETTING_STARTED.md               # Getting started guide
 .claude/
-├── skills/                  # Claude Code Skills
-│   └── k8s-deployment-debugger.md  # Interactive debugging skill
-└── commands/                # Slash commands
-    ├── debug-app.md         # Main debugging command
-    ├── check-deployment.md  # Quick deployment status
-    ├── view-pod-logs.md     # Pod log viewing
-    ├── check-events.md      # Cluster events viewer
-    └── check-resources.md   # Resource usage checker
-.mcp.json                    # MCP server configuration
+└── settings.local.json              # Local settings for development
 ```
 
 ### Core Components
 
-1. **Interactive Skill** (`.claude/skills/k8s-deployment-debugger.md`)
+1. **Interactive Skill** (`skills/k8s-deployment-debugger/SKILL.md`)
    - Claude-invoked skill that guides debugging through systematic diagnostics
    - Asks focused questions to narrow down issues
    - Uses kubernetes kubectl CLI for cluster introspection
    - Provides verbose explanations when requested
    - Covers: pod status, logs, events, resources, probes, configuration, storage, ArgoCD sync
 
-2. **Slash Commands** (`.claude/commands/`)
+2. **Slash Commands** (`commands/`)
 
    **Kubernetes Commands:**
    - `/debug-app` - Launch interactive debugging session
@@ -135,13 +142,13 @@ Try the ArgoCD slash commands (requires `argocd` CLI installed and logged in):
 
 ### Adding a New Diagnostic Capability
 
-1. Create a new command file in `.claude/commands/` with clear examples
+1. Create a new command file in `commands/` with clear examples
 2. Document the kubectl commands and expected usage patterns
 3. Test with your cluster to ensure proper output formatting
 
 ### Enhancing the Skill
 
-The skill in `.claude/skills/k8s-deployment-debugger.md` should:
+The skill in `skills/k8s-deployment-debugger/SKILL.md` should:
 - Guide users through problems step-by-step
 - Ask clarifying questions using AskUserQuestion
 - Use kubectl commands via Bash to gather cluster state
