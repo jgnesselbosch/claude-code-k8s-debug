@@ -1,6 +1,5 @@
 {
   "name": "argocd-k8s-debugger",
-  "displayName": "ArgoCD Kubernetes Debugger",
   "description": "Intelligent debugging assistant for applications deployed to GitOps-enabled Kubernetes clusters backed by ArgoCD. Helps developers and DevOps engineers troubleshoot failing deployments through interactive guided diagnostics.",
   "version": "0.1.0",
   "author": {
