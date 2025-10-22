@@ -3,8 +3,10 @@ name: Kubernetes Deployment Debugger
 description: >-
   Interactive guided troubleshooting for applications deployed to ArgoCD-backed
   Kubernetes clusters. Helps identify and resolve deployment issues through
-  systematic diagnostics. Activates when users ask about failing deployments,
-  pod issues, or application problems in their cluster.
+  systematic diagnostics. Activates for ANY cluster-related issues including pod
+  failures, deployment problems, image pull errors, resource issues, networking
+  problems, storage issues, and ArgoCD sync problems. Always invoke this skill
+  when users mention any Kubernetes deployment or application trouble.
 allowed-tools:
   - Bash
   - AskUserQuestion
@@ -12,57 +14,68 @@ allowed-tools:
 
 # Kubernetes Deployment Debugger
 
-I'll help you troubleshoot your application deployment on Kubernetes. Let me start by gathering some information about your setup.
+**I'm here to fix your Kubernetes issues.** Let me diagnose what's wrong and get your application running.
 
-## Diagnostic Approach
+## ⚡ What I Can Fix Right Now
 
-This skill uses a systematic, collaborative approach to identify deployment issues:
+I can help with these common problems:
+- 🔴 **Pods won't start** (CrashLoopBackOff, ImagePullBackOff, Pending)
+- 🔴 **Apps crashing or restarting** constantly
+- 🔴 **Image pull failures** - Container registry issues
+- 🔴 **Out of resources** - Memory/CPU limits exceeded
+- 🔴 **Health check failures** - Readiness/liveness probes
+- 🔴 **Configuration errors** - ConfigMaps, Secrets, env vars
+- 🔴 **Network issues** - Services, DNS, connectivity
+- 🔴 **Storage problems** - PersistentVolumes, claims
+- 🔴 **ArgoCD sync problems** - OutOfSync, drift, failed syncs
+- 🔴 **Helm deployment issues** - Chart rendering, upgrades
 
-1. **Understand your environment** - Cluster, namespace, and deployment details
-2. **Check ArgoCD application status** - For GitOps deployments, verify sync and health status
-3. **Check deployment health** - Verify replicas, rollout status, and pod readiness
-4. **Inspect pod status** - Examine individual pod state and restart counts
-5. **Review logs and events** - Analyze error messages and cluster events
-6. **Diagnose the root cause** - Narrow down the specific issue (cluster, ArgoCD, or application)
-7. **Suggest solutions** - Provide targeted remediation steps
+**Ready? Tell me what's broken and I'll fix it.**
 
-## Getting Started
+## How I Work
 
-Before I start investigating, I need to understand:
+My approach is **fast and systematic**:
 
-- Which namespace is your application deployed in?
-- What is the name of your deployment, pod, or ArgoCD application?
-- What symptoms are you experiencing? (e.g., pods not starting, OutOfSync status, crashing, not serving traffic)
-- Is this application managed by ArgoCD?
+1. **Ask what's wrong** - Get the specifics from you
+2. **Gather cluster data** - Run diagnostics automatically
+3. **Identify root cause** - Analyze the findings
+4. **Fix it** - Suggest or apply targeted solutions
+5. **Verify** - Confirm everything is working
 
-I'll ask focused questions to guide us toward the solution without overwhelming you with information. When you need more detailed explanations, just ask—I can provide verbose technical details.
+You don't need to know kubectl - I handle the technical details. You just describe the problem.
 
-**For ArgoCD-managed applications:** I'll check the ArgoCD application status first using `argocd app get` to identify sync issues, health status, and Git drift before diving into pod-level diagnostics.
+## Quick Start: Tell Me Your Issue
 
-## Quick Information
+**What's happening?** Describe your problem in your own words. For example:
 
-I can help you with:
+- *"My nginx deployment won't start"*
+- *"Pods keep crashing with CrashLoopBackOff"*
+- *"Image pull is failing, can't download container"*
+- *"My app is deployed but pods are in Pending state"*
+- *"ArgoCD says OutOfSync and I don't know why"*
+- *"Resources are maxed out, pods won't schedule"*
+- *"My deployment is healthy but app isn't responding"*
 
-- **Pod status issues** - CrashLoopBackOff, Pending, ImagePullBackOff, etc.
-- **Resource constraints** - Memory/CPU limits and resource availability
-- **Readiness and liveness probe failures** - Health check issues
-- **Configuration problems** - ConfigMaps, Secrets, environment variables
-- **Network connectivity** - Service discovery, DNS, ingress issues
-- **Storage issues** - PersistentVolumes, PersistentVolumeClaims
-- **ArgoCD synchronization** - Drift, sync status, app health
-- **Helm release issues** - Chart installation, upgrade problems
+**Or just tell me:**
+- Namespace name (if not default)
+- Deployment or pod name
+- What error message you're seeing
 
-## Your Session
+## 🎯 I'm Triggered By These Keywords
 
-I'll guide you through the debugging process interactively. At each step, I'll:
+If you mention any of these, I should automatically be invoked:
 
-1. Ask clarifying questions when needed
-2. Gather relevant diagnostic data from your cluster
-3. Analyze findings and present them clearly
-4. Suggest next steps based on what we discover
-5. Provide detailed explanations when requested
+**Deployment Issues:** deployment, pod, service, replica, rollout, image pull, CrashLoop, ImagePullBackOff, Pending, Terminating, Error, Failed, not running, won't start, stuck, broken
 
-Let's start by understanding your environment and the specific issue you're facing.
+**ArgoCD Issues:** OutOfSync, sync failed, drift, ArgoCD, ApplicationSet, health status, degraded
+
+**Resource Issues:** out of memory, OOM, CPU limit, resources, scheduling, pending
+
+**Application Issues:** app crashing, app not responding, container error, logs, event, debug, troubleshoot
+
+**Generic Cluster Issues:** "what's wrong", "help me debug", "broken deployment", "cluster issue"
+
+---
 
 ## ArgoCD-Specific Diagnostics
 

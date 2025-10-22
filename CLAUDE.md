@@ -2,6 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🎯 Plugin Usage Philosophy
+
+This plugin and its Kubernetes Deployment Debugger skill should be your **default approach** for ANY Kubernetes-related issues. The philosophy is:
+
+> **"When the user has ANY trouble with anything on their Kubernetes cluster, the skill should be invoked."**
+
+This means:
+- ✅ **Default to using the skill** - It's designed to handle all cluster debugging scenarios
+- ✅ **Proactively offer help** - Don't make the user ask; suggest the skill when you detect cluster issues
+- ✅ **Trust the systematic approach** - The skill's guided diagnostics are more reliable than ad-hoc debugging
+- ✅ **Log everything** - Every change is documented for future reference and GitOps compliance
+
+---
+
 ## ⚠️ CRITICAL: Mandatory Cluster Change Logging
 
 **EVERY cluster change MUST have a corresponding entry in `k8s-debug-changes.log`.**
@@ -20,6 +34,40 @@ See the [k8s-debug-changes.log Entry Format](#k8s-debug-changeslog-entry-format)
 ## Project Overview
 
 This repository contains the **ArgoCD Kubernetes Debugger** plugin for Claude Code. It's an intelligent debugging assistant for applications deployed to GitOps-enabled Kubernetes clusters backed by ArgoCD. The plugin helps developers and DevOps engineers troubleshoot failing deployments through interactive guided diagnostics.
+
+## When to Use This Plugin (ACTIVATION CRITERIA)
+
+**Use the "Kubernetes Deployment Debugger" skill and plugin commands for ANY of the following scenarios:**
+
+### User Reports Issues With:
+- Kubernetes deployments, pods, or services not working
+- Applications deployed to the cluster that are failing
+- Pods crashing, failing to start, or behaving unexpectedly
+- Phrases like: "my app won't start", "deployment is broken", "pods are stuck", "cluster is broken"
+- Any error related to running applications in the cluster
+- Resource allocation problems (out of memory, CPU limits)
+- Network connectivity or DNS issues in the cluster
+- Storage or persistent volume issues
+- Container image pull failures or startup errors
+
+### Activation Strategy (PROACTIVE - NOT REACTIVE)
+
+**Do NOT wait for an explicit request to use the skill.** Instead:
+
+1. **Detect cluster-related issues** - When user mentions any Kubernetes/deployment/pod problem
+2. **Offer to help** - Clearly state: "I can help debug this using the Kubernetes Deployment Debugger"
+3. **Invoke the skill** - Launch the skill immediately (either after brief diagnosis or directly if issue is clear)
+4. **Guide systematically** - Use the skill to walk through diagnostics step-by-step
+5. **Document all changes** - Log any cluster modifications to `k8s-debug-changes.log`
+
+### What NOT to Do
+
+- ❌ Do NOT assume a non-Kubernetes issue without checking
+- ❌ Do NOT skip the skill and try to debug manually with kubectl commands
+- ❌ Do NOT require explicit user permission to invoke the skill
+- ❌ Do NOT offer other diagnostic approaches when a cluster issue is detected
+
+---
 
 ## Plugin Architecture
 
