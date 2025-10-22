@@ -221,3 +221,37 @@ The plugin works with your existing kubectl configuration and cluster contexts.
 
 ```
 User: My production API service won't start. Can you help?
+
+
+## Cost Tracking
+
+This plugin includes built-in cost tracking to help you monitor your Claude usage.
+
+### Check Your Costs
+```bash
+# In Claude Code, simply type:
+/costs
+```
+
+This will show you:
+- Token usage for today
+- Estimated cost in USD
+- Tips to optimize usage
+
+### Cost-Saving Tips
+
+1. **Use `/clear` regularly** - Clears conversation context between debugging tasks
+2. **Be specific** - "Debug nginx deployment in production namespace" is better than "help me debug"
+3. **Use the diagnostic scripts** - They don't consume tokens:
+```bash
+   python scripts/check_deployment.py my-deploy production
+```
+4. **Close large log outputs** - After reviewing logs, clear them from context
+
+### Understanding Costs
+
+- **Pro Plan ($17/month)**: ~500K tokens/day typical usage
+- **Max Plan ($100/month)**: ~2M tokens/day typical usage  
+- **API Pay-as-you-go**: ~$3 per 1M input tokens
+
+Your `/costs` command shows real usage so you can stay within your limits.

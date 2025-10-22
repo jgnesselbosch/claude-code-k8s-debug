@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    
+    "ccusage": {
+      "command": "npx",
+      "args": ["@ccusage/mcp@latest", "--type", "stdio"]
+    }
+  }
+}
