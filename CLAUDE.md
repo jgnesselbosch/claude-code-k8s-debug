@@ -2,6 +2,21 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ CRITICAL: Mandatory Cluster Change Logging
+
+**EVERY cluster change MUST have a corresponding entry in `k8s-debug-changes.log`.**
+
+When you complete any debugging task that modifies the cluster:
+1. ✅ Make the cluster change
+2. ✅ Create an entry in `k8s-debug-changes.log` using the standardized template
+3. ✅ Only then mark the task as complete
+
+**Failure to log changes results in lost debugging history and potential GitOps conflicts.**
+
+See the [k8s-debug-changes.log Entry Format](#k8s-debug-changeslog-entry-format) section below for the required template.
+
+---
+
 ## Project Overview
 
 This repository contains the **ArgoCD Kubernetes Debugger** plugin for Claude Code. It's an intelligent debugging assistant for applications deployed to GitOps-enabled Kubernetes clusters backed by ArgoCD. The plugin helps developers and DevOps engineers troubleshoot failing deployments through interactive guided diagnostics.
@@ -186,17 +201,47 @@ When testing the plugin:
 ## Requirements while changing objects in the cluster
 
 When making changes to objects in the Kubernetes cluster during debugging sessions, ensure that:
- - Do not just make changes imperatively by using the kubectl command line tool.
- - Instead, make sure that every change is reflected in the Git repository that ArgoCD is syncing from. This ensures that the changes are not overwritten during the next sync operation by ArgoCD.
- - If you need to make temporary changes for debugging purposes, document them clearly and revert them back in the Git repository once the debugging session is complete.
- - Always follow best practices for GitOps workflows to maintain cluster state consistency.
- - You are allowed to act not in accordance with these requirements only if the user explicitly instructs you to do so. Ask the user proactively if you are unsure.
- - When suggesting changes to the user, remind them to update their Git repository accordingly.
- - Write any changes you made to cluster objects in a dedicated section at the end of your response called "Changes made to the cluster" and also write them into a log file called `k8s-debug-changes.log` in the current working directory. This file should not be pushed to any Git repository.
+
+### GitOps Compliance (MANDATORY)
+ - **NEVER** make changes imperatively using kubectl without ensuring they're reflected in Git
+ - **ALWAYS** ensure that every cluster change is reflected in the Git repository that ArgoCD is syncing from
+ - This prevents changes from being overwritten during the next ArgoCD sync operation
+ - Always follow best practices for GitOps workflows to maintain cluster state consistency
+
+### Temporary Changes
+ - If you need temporary changes for debugging purposes, document them clearly
+ - Revert temporary changes in the Git repository once the debugging session is complete
+ - Temporary cluster-only changes will be lost on next ArgoCD sync - this is by design
+
+### User Authorization
+ - You are allowed to deviate from these requirements **ONLY IF** the user explicitly instructs you to do so
+ - Ask the user proactively if you are unsure about their intent
+ - When suggesting changes to the user, **always** remind them to update their Git repository accordingly
+
+### Mandatory Logging (CRITICAL - DO NOT SKIP)
+ - **EVERY change made to cluster objects MUST be logged**
+ - Write changes in a dedicated section at the end of your response called "Changes made to the cluster"
+ - **IMMEDIATELY** write an entry to `k8s-debug-changes.log` in the current working directory following the standardized template
+ - This file should NOT be pushed to any Git repository
+ - **Do not consider a debugging session complete until the log entry is written**
 
 ## k8s-debug-changes.log Entry Format
 
 All entries in the `k8s-debug-changes.log` file **MUST** follow this standardized template to maintain consistency and clarity across debugging sessions.
+
+### Pre-Completion Checklist
+
+**Before marking any cluster-change task as complete, verify:**
+
+- [ ] Cluster change has been successfully applied
+- [ ] Change has been verified to work as expected
+- [ ] Entry created in `k8s-debug-changes.log`
+- [ ] Entry follows the template format exactly
+- [ ] All required sections are completed (Changes Made, Issue Resolved, etc.)
+- [ ] GitOps implications have been documented
+- [ ] User has been informed about updating Git repository
+
+**Do NOT consider the task complete without ALL checkboxes passing.**
 
 ### Template Structure
 
